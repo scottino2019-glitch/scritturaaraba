@@ -52,9 +52,22 @@
 
         <!-- Study Section -->
         <div id="studySection" class="space-y-8">
+            <!-- Form Selector -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-white rounded-lg p-2 shadow-md">
+                    <button id="isolatedBtn" class="px-4 py-2 rounded-md bg-amber-500 text-white font-medium">
+                        منفصلة Isolata
+                    </button>
+                    <button id="allFormsBtn" class="px-4 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50">
+                        جميع الأشكال Tutte le forme
+                    </button>
+                </div>
+            </div>
+
             <!-- Info -->
             <div class="text-center mb-6">
                 <p class="text-lg text-gray-600">حروف الهجاء العربية - 28 lettere dell'alfabeto arabo</p>
+                <p id="formInfo" class="text-sm text-gray-500 mt-2">Forma isolata - come appaiono da sole</p>
             </div>
 
             <!-- Character Grid -->
@@ -68,12 +81,18 @@
             <div class="max-w-2xl mx-auto">
                 <!-- Practice Mode Selector -->
                 <div class="flex justify-center mb-6">
-                    <div class="bg-white rounded-lg p-2 shadow-md">
-                        <button id="recognitionBtn" class="px-4 py-2 rounded-md bg-orange-500 text-white font-medium">
+                    <div class="bg-white rounded-lg p-2 shadow-md flex flex-wrap gap-1">
+                        <button id="recognitionBtn" class="px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm">
                             🔍 Riconoscimento
                         </button>
-                        <button id="writingBtn" class="px-4 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50">
+                        <button id="writingBtn" class="px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm">
                             ✍️ Scrittura
+                        </button>
+                        <button id="formsBtn" class="px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm">
+                            📝 Forme
+                        </button>
+                        <button id="connectionBtn" class="px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm">
+                            🔗 Connessioni
                         </button>
                     </div>
                 </div>
@@ -125,19 +144,46 @@
     </div>
 
     <script>
-        // Arabic alphabet data
+        // Arabic alphabet data with all forms
         const arabicLetters = {
-            'ا': 'alif', 'ب': 'ba', 'ت': 'ta', 'ث': 'tha', 'ج': 'jim',
-            'ح': 'ha', 'خ': 'kha', 'د': 'dal', 'ذ': 'dhal', 'ر': 'ra',
-            'ز': 'za', 'س': 'sin', 'ش': 'shin', 'ص': 'sad', 'ض': 'dad',
-            'ط': 'ta', 'ظ': 'za', 'ع': 'ain', 'غ': 'ghain', 'ف': 'fa',
-            'ق': 'qaf', 'ك': 'kaf', 'ل': 'lam', 'م': 'mim', 'ن': 'nun',
-            'ه': 'ha', 'و': 'waw', 'ي': 'ya'
+            'ا': { name: 'alif', isolated: 'ا', initial: 'ا', medial: 'ـا', final: 'ـا' },
+            'ب': { name: 'ba', isolated: 'ب', initial: 'بـ', medial: 'ـبـ', final: 'ـب' },
+            'ت': { name: 'ta', isolated: 'ت', initial: 'تـ', medial: 'ـتـ', final: 'ـت' },
+            'ث': { name: 'tha', isolated: 'ث', initial: 'ثـ', medial: 'ـثـ', final: 'ـث' },
+            'ج': { name: 'jim', isolated: 'ج', initial: 'جـ', medial: 'ـجـ', final: 'ـج' },
+            'ح': { name: 'ha', isolated: 'ح', initial: 'حـ', medial: 'ـحـ', final: 'ـح' },
+            'خ': { name: 'kha', isolated: 'خ', initial: 'خـ', medial: 'ـخـ', final: 'ـخ' },
+            'د': { name: 'dal', isolated: 'د', initial: 'د', medial: 'ـد', final: 'ـد' },
+            'ذ': { name: 'dhal', isolated: 'ذ', initial: 'ذ', medial: 'ـذ', final: 'ـذ' },
+            'ر': { name: 'ra', isolated: 'ر', initial: 'ر', medial: 'ـر', final: 'ـر' },
+            'ز': { name: 'za', isolated: 'ز', initial: 'ز', medial: 'ـز', final: 'ـز' },
+            'س': { name: 'sin', isolated: 'س', initial: 'سـ', medial: 'ـسـ', final: 'ـس' },
+            'ش': { name: 'shin', isolated: 'ش', initial: 'شـ', medial: 'ـشـ', final: 'ـش' },
+            'ص': { name: 'sad', isolated: 'ص', initial: 'صـ', medial: 'ـصـ', final: 'ـص' },
+            'ض': { name: 'dad', isolated: 'ض', initial: 'ضـ', medial: 'ـضـ', final: 'ـض' },
+            'ط': { name: 'ta', isolated: 'ط', initial: 'طـ', medial: 'ـطـ', final: 'ـط' },
+            'ظ': { name: 'za', isolated: 'ظ', initial: 'ظـ', medial: 'ـظـ', final: 'ـظ' },
+            'ع': { name: 'ain', isolated: 'ع', initial: 'عـ', medial: 'ـعـ', final: 'ـع' },
+            'غ': { name: 'ghain', isolated: 'غ', initial: 'غـ', medial: 'ـغـ', final: 'ـغ' },
+            'ف': { name: 'fa', isolated: 'ف', initial: 'فـ', medial: 'ـفـ', final: 'ـف' },
+            'ق': { name: 'qaf', isolated: 'ق', initial: 'قـ', medial: 'ـقـ', final: 'ـق' },
+            'ك': { name: 'kaf', isolated: 'ك', initial: 'كـ', medial: 'ـكـ', final: 'ـك' },
+            'ل': { name: 'lam', isolated: 'ل', initial: 'لـ', medial: 'ـلـ', final: 'ـل' },
+            'م': { name: 'mim', isolated: 'م', initial: 'مـ', medial: 'ـمـ', final: 'ـم' },
+            'ن': { name: 'nun', isolated: 'ن', initial: 'نـ', medial: 'ـنـ', final: 'ـن' },
+            'ه': { name: 'ha', isolated: 'ه', initial: 'هـ', medial: 'ـهـ', final: 'ـه' },
+            'و': { name: 'waw', isolated: 'و', initial: 'و', medial: 'ـو', final: 'ـو' },
+            'ي': { name: 'ya', isolated: 'ي', initial: 'يـ', medial: 'ـيـ', final: 'ـي' }
         };
+
+        // Exercise types
+        const exerciseTypes = ['recognition', 'writing', 'forms', 'connection'];
+        let currentExerciseType = 'recognition';
 
         // State
         let currentMode = 'study';
         let practiceMode = 'recognition';
+        let studyMode = 'isolated'; // 'isolated' or 'allForms'
         let currentQuestion = null;
         let score = 0;
         let total = 0;
@@ -147,9 +193,14 @@
         const practiceBtn = document.getElementById('practiceBtn');
         const studySection = document.getElementById('studySection');
         const practiceSection = document.getElementById('practiceSection');
+        const isolatedBtn = document.getElementById('isolatedBtn');
+        const allFormsBtn = document.getElementById('allFormsBtn');
+        const formInfo = document.getElementById('formInfo');
         const characterGrid = document.getElementById('characterGrid');
         const recognitionBtn = document.getElementById('recognitionBtn');
         const writingBtn = document.getElementById('writingBtn');
+        const formsBtn = document.getElementById('formsBtn');
+        const connectionBtn = document.getElementById('connectionBtn');
         const practiceCard = document.getElementById('practiceCard');
         const questionText = document.getElementById('questionText');
         const questionPrompt = document.getElementById('questionPrompt');
@@ -167,8 +218,12 @@
         // Event listeners
         studyBtn.addEventListener('click', () => switchMode('study'));
         practiceBtn.addEventListener('click', () => switchMode('practice'));
+        isolatedBtn.addEventListener('click', () => switchStudyMode('isolated'));
+        allFormsBtn.addEventListener('click', () => switchStudyMode('allForms'));
         recognitionBtn.addEventListener('click', () => switchPracticeMode('recognition'));
         writingBtn.addEventListener('click', () => switchPracticeMode('writing'));
+        formsBtn.addEventListener('click', () => switchPracticeMode('forms'));
+        connectionBtn.addEventListener('click', () => switchPracticeMode('connection'));
         nextBtn.addEventListener('click', nextQuestion);
         checkBtn.addEventListener('click', checkWritingAnswer);
         writingAnswer.addEventListener('keypress', (e) => {
@@ -193,14 +248,37 @@
             }
         }
 
+        function switchStudyMode(mode) {
+            studyMode = mode;
+            if (mode === 'isolated') {
+                isolatedBtn.className = 'px-4 py-2 rounded-md bg-amber-500 text-white font-medium';
+                allFormsBtn.className = 'px-4 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50';
+                formInfo.textContent = 'Forma isolata - come appaiono da sole';
+            } else {
+                allFormsBtn.className = 'px-4 py-2 rounded-md bg-amber-500 text-white font-medium';
+                isolatedBtn.className = 'px-4 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50';
+                formInfo.textContent = 'Tutte le forme - isolata, iniziale, mediana, finale';
+            }
+            renderCharacterGrid();
+        }
+
         function switchPracticeMode(mode) {
             practiceMode = mode;
+            // Reset all buttons
+            recognitionBtn.className = 'px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm';
+            writingBtn.className = 'px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm';
+            formsBtn.className = 'px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm';
+            connectionBtn.className = 'px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm';
+            
+            // Highlight active button
             if (mode === 'recognition') {
-                recognitionBtn.className = 'px-4 py-2 rounded-md bg-orange-500 text-white font-medium';
-                writingBtn.className = 'px-4 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50';
-            } else {
-                writingBtn.className = 'px-4 py-2 rounded-md bg-orange-500 text-white font-medium';
-                recognitionBtn.className = 'px-4 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50';
+                recognitionBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
+            } else if (mode === 'writing') {
+                writingBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
+            } else if (mode === 'forms') {
+                formsBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
+            } else if (mode === 'connection') {
+                connectionBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
             }
             startPractice();
         }
@@ -208,19 +286,43 @@
         function renderCharacterGrid() {
             characterGrid.innerHTML = '';
             
-            Object.entries(arabicLetters).forEach(([letter, transliteration]) => {
+            Object.entries(arabicLetters).forEach(([letter, data]) => {
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow cursor-pointer card-flip min-h-[130px] flex flex-col justify-center';
-                card.innerHTML = `
-                    <div class="card-front">
-                        <div class="text-6xl mb-3 arabic-font font-bold text-black arabic-text">${letter}</div>
-                        <div class="text-lg font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">${transliteration}</div>
-                    </div>
-                    <div class="card-back bg-orange-50 rounded-lg p-6 flex flex-col justify-center">
-                        <div class="text-3xl mb-3 text-orange-700 font-bold">${transliteration}</div>
-                        <div class="text-5xl arabic-font font-bold text-orange-600 arabic-text">${letter}</div>
-                    </div>
-                `;
+                
+                if (studyMode === 'isolated') {
+                    card.className = 'bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow cursor-pointer card-flip min-h-[130px] flex flex-col justify-center';
+                    card.innerHTML = `
+                        <div class="card-front">
+                            <div class="text-6xl mb-3 arabic-font font-bold text-black arabic-text">${data.isolated}</div>
+                            <div class="text-lg font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">${data.name}</div>
+                        </div>
+                        <div class="card-back bg-orange-50 rounded-lg p-6 flex flex-col justify-center">
+                            <div class="text-3xl mb-3 text-orange-700 font-bold">${data.name}</div>
+                            <div class="text-5xl arabic-font font-bold text-orange-600 arabic-text">${data.isolated}</div>
+                        </div>
+                    `;
+                } else {
+                    card.className = 'bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition-shadow cursor-pointer card-flip min-h-[160px] flex flex-col justify-center';
+                    card.innerHTML = `
+                        <div class="card-front">
+                            <div class="text-4xl mb-2 arabic-font font-bold text-black arabic-text">${data.isolated}</div>
+                            <div class="text-sm font-semibold text-gray-700 bg-gray-100 px-2 py-1 rounded-full mb-2">${data.name}</div>
+                            <div class="grid grid-cols-2 gap-1 text-xs text-gray-600">
+                                <div>Iniz: <span class="arabic-font text-lg">${data.initial}</span></div>
+                                <div>Med: <span class="arabic-font text-lg">${data.medial}</span></div>
+                                <div>Fin: <span class="arabic-font text-lg">${data.final}</span></div>
+                                <div>Isol: <span class="arabic-font text-lg">${data.isolated}</span></div>
+                            </div>
+                        </div>
+                        <div class="card-back bg-orange-50 rounded-lg p-4 flex flex-col justify-center">
+                            <div class="text-2xl mb-2 text-orange-700 font-bold">${data.name}</div>
+                            <div class="text-4xl arabic-font font-bold text-orange-600 arabic-text mb-2">${data.isolated}</div>
+                            <div class="text-xs text-orange-600">
+                                <div class="arabic-font text-sm">${data.initial} ${data.medial} ${data.final}</div>
+                            </div>
+                        </div>
+                    `;
+                }
                 
                 card.addEventListener('click', () => {
                     card.classList.toggle('flipped');
@@ -243,20 +345,24 @@
             
             currentQuestion = {
                 letter: randomLetter[0],
-                correct: randomLetter[1]
+                data: randomLetter[1]
             };
 
-            questionText.textContent = currentQuestion.letter;
             feedback.classList.add('hidden');
             
             if (practiceMode === 'recognition') {
                 setupRecognitionQuestion();
-            } else {
+            } else if (practiceMode === 'writing') {
                 setupWritingQuestion();
+            } else if (practiceMode === 'forms') {
+                setupFormsQuestion();
+            } else if (practiceMode === 'connection') {
+                setupConnectionQuestion();
             }
         }
 
         function setupRecognitionQuestion() {
+            questionText.textContent = currentQuestion.data.isolated;
             questionPrompt.textContent = 'Come si pronuncia questa lettera?';
             answerOptions.classList.remove('hidden');
             writingInput.classList.add('hidden');
@@ -264,13 +370,13 @@
             checkBtn.classList.add('hidden');
 
             // Generate options
-            const allTransliterations = Object.values(arabicLetters);
-            const options = [currentQuestion.correct];
+            const allNames = Object.values(arabicLetters).map(data => data.name);
+            const options = [currentQuestion.data.name];
             
             while (options.length < 4) {
-                const randomTransliteration = allTransliterations[Math.floor(Math.random() * allTransliterations.length)];
-                if (!options.includes(randomTransliteration)) {
-                    options.push(randomTransliteration);
+                const randomName = allNames[Math.floor(Math.random() * allNames.length)];
+                if (!options.includes(randomName)) {
+                    options.push(randomName);
                 }
             }
             
@@ -288,6 +394,7 @@
         }
 
         function setupWritingQuestion() {
+            questionText.textContent = currentQuestion.data.isolated;
             questionPrompt.textContent = 'Scrivi la traslitterazione di questa lettera:';
             answerOptions.classList.add('hidden');
             writingInput.classList.remove('hidden');
@@ -297,15 +404,97 @@
             writingAnswer.focus();
         }
 
+        function setupFormsQuestion() {
+            const forms = ['initial', 'medial', 'final', 'isolated'];
+            const randomForm = forms[Math.floor(Math.random() * forms.length)];
+            const formNames = {
+                'initial': 'iniziale',
+                'medial': 'mediana', 
+                'final': 'finale',
+                'isolated': 'isolata'
+            };
+            
+            questionText.textContent = currentQuestion.data[randomForm];
+            questionPrompt.textContent = `Quale lettera è questa in forma ${formNames[randomForm]}?`;
+            answerOptions.classList.remove('hidden');
+            writingInput.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+            checkBtn.classList.add('hidden');
+
+            // Generate options
+            const allNames = Object.values(arabicLetters).map(data => data.name);
+            const options = [currentQuestion.data.name];
+            
+            while (options.length < 4) {
+                const randomName = allNames[Math.floor(Math.random() * allNames.length)];
+                if (!options.includes(randomName)) {
+                    options.push(randomName);
+                }
+            }
+            
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+            
+            answerOptions.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium';
+                button.textContent = option;
+                button.addEventListener('click', () => checkRecognitionAnswer(option));
+                answerOptions.appendChild(button);
+            });
+        }
+
+        function setupConnectionQuestion() {
+            // Show a letter and ask which form connects to the next letter
+            const connectingLetters = Object.entries(arabicLetters).filter(([letter, data]) => 
+                data.initial !== data.isolated || data.medial !== data.isolated
+            );
+            
+            if (connectingLetters.length === 0) {
+                setupRecognitionQuestion();
+                return;
+            }
+            
+            const randomConnecting = connectingLetters[Math.floor(Math.random() * connectingLetters.length)];
+            currentQuestion = { letter: randomConnecting[0], data: randomConnecting[1] };
+            
+            questionText.innerHTML = `${currentQuestion.data.isolated} + ل = ?`;
+            questionPrompt.textContent = 'Come si scrive questa lettera quando si connette alla lettera successiva?';
+            answerOptions.classList.remove('hidden');
+            writingInput.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+            checkBtn.classList.add('hidden');
+
+            const options = [
+                currentQuestion.data.initial + 'ل',
+                currentQuestion.data.isolated + 'ل',
+                currentQuestion.data.medial + 'ل',
+                currentQuestion.data.final + 'ل'
+            ];
+            
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+            
+            answerOptions.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium arabic-font text-xl';
+                button.textContent = option;
+                button.addEventListener('click', () => checkConnectionAnswer(option));
+                answerOptions.appendChild(button);
+            });
+        }
+
         function checkRecognitionAnswer(selected) {
             total++;
-            const isCorrect = selected === currentQuestion.correct;
+            const isCorrect = selected === currentQuestion.data.name;
             
             if (isCorrect) {
                 score++;
                 showFeedback('صحيح! 🎉 (Corretto!)', 'bg-green-100 text-green-800');
             } else {
-                showFeedback(`خطأ. La risposta corretta è: ${currentQuestion.correct}`, 'bg-red-100 text-red-800');
+                showFeedback(`خطأ. La risposta corretta è: ${currentQuestion.data.name}`, 'bg-red-100 text-red-800');
             }
             
             updateScore();
@@ -314,10 +503,36 @@
             const buttons = answerOptions.querySelectorAll('button');
             buttons.forEach(btn => {
                 btn.disabled = true;
-                if (btn.textContent === currentQuestion.correct) {
+                if (btn.textContent === currentQuestion.data.name) {
                     btn.className = 'p-3 bg-green-200 rounded-lg font-medium';
                 } else if (btn.textContent === selected && !isCorrect) {
                     btn.className = 'p-3 bg-red-200 rounded-lg font-medium';
+                }
+            });
+        }
+
+        function checkConnectionAnswer(selected) {
+            total++;
+            const correctAnswer = currentQuestion.data.initial + 'ل';
+            const isCorrect = selected === correctAnswer;
+            
+            if (isCorrect) {
+                score++;
+                showFeedback('صحيح! 🎉 (Corretto!)', 'bg-green-100 text-green-800');
+            } else {
+                showFeedback(`خطأ. La risposta corretta è: ${correctAnswer}`, 'bg-red-100 text-red-800');
+            }
+            
+            updateScore();
+            
+            // Disable all option buttons
+            const buttons = answerOptions.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === correctAnswer) {
+                    btn.className = 'p-3 bg-green-200 rounded-lg font-medium arabic-font text-xl';
+                } else if (btn.textContent === selected && !isCorrect) {
+                    btn.className = 'p-3 bg-red-200 rounded-lg font-medium arabic-font text-xl';
                 }
             });
         }
@@ -326,11 +541,11 @@
             const userAnswer = writingAnswer.value.toLowerCase().trim();
             total++;
             
-            if (userAnswer === currentQuestion.correct) {
+            if (userAnswer === currentQuestion.data.name) {
                 score++;
                 showFeedback('صحيح! 🎉 (Corretto!)', 'bg-green-100 text-green-800');
             } else {
-                showFeedback(`خطأ. La risposta corretta è: ${currentQuestion.correct}`, 'bg-red-100 text-red-800');
+                showFeedback(`خطأ. La risposta corretta è: ${currentQuestion.data.name}`, 'bg-red-100 text-red-800');
             }
             
             updateScore();
@@ -352,5 +567,5 @@
         // Initialize
         renderCharacterGrid();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f10480e3a683a8',t:'MTc1NTE4MDQzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f7f352d71cc724',t:'MTc1NTI1MzEzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
