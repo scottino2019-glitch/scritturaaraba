@@ -1,50 +1,77 @@
 <!DOCTYPE html>
-<html lang="it" dir="ltr">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impara Alfabeto Arabo</title>
+    <title>Impara Arabo - Alfabeto Arabo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;700&display=swap');
-        .arabic-font { font-family: 'Noto Sans Arabic', sans-serif; }
-        .card-flip {
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-        .card-flip.flipped {
-            transform: rotateY(180deg);
-        }
-        .card-front, .card-back {
-            backface-visibility: hidden;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-        .card-back {
-            transform: rotateY(180deg);
-        }
-        .arabic-text {
+        .arabic-font { 
+            font-family: 'Noto Sans Arabic', sans-serif; 
             direction: rtl;
-            text-align: center;
+        }
+        .character-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            border: 2px solid #e5e7eb;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            min-height: 220px;
+        }
+        .character-card:hover {
+            border-color: #f59e0b;
+            box-shadow: 0 12px 35px rgba(245, 158, 11, 0.15);
+            transform: translateY(-4px);
+        }
+        .romanization-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+        .type-badge {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .meaning-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .detailed-card {
+            min-height: 380px;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-amber-100 to-orange-100 min-h-screen arabic-font">
+<body class="bg-gradient-to-br from-amber-50 to-orange-100 min-h-screen arabic-font">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="text-center mb-8">
             <h1 class="text-4xl font-bold text-amber-800 mb-2">تعلم العربية</h1>
-            <p class="text-lg text-gray-700">Impara l'Alfabeto Arabo</p>
+            <p class="text-lg text-gray-700">Impara l'Arabo</p>
+            <div class="mt-2 text-sm text-gray-600">
+                🇸🇦 Alfabeto Arabo - الأبجدية العربية
+            </div>
         </header>
 
         <!-- Navigation -->
         <nav class="flex justify-center mb-8">
-            <div class="bg-white rounded-full p-2 shadow-lg">
-                <button id="studyBtn" class="px-6 py-3 rounded-full bg-amber-600 text-white font-medium transition-all">
+            <div class="bg-white rounded-2xl p-3 shadow-xl border border-gray-200">
+                <button id="studyBtn" class="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                     📚 Studio
                 </button>
-                <button id="practiceBtn" class="px-6 py-3 rounded-full text-amber-600 font-medium transition-all hover:bg-amber-50">
+                <button id="practiceBtn" class="px-8 py-4 rounded-xl text-amber-600 font-semibold transition-all duration-300 hover:bg-amber-50 hover:text-amber-700">
                     🎯 Esercizi
                 </button>
             </div>
@@ -52,26 +79,38 @@
 
         <!-- Study Section -->
         <div id="studySection" class="space-y-8">
-            <!-- Form Selector -->
+            <!-- Content Type Selector -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-white rounded-2xl p-3 shadow-lg border border-gray-200 flex flex-wrap gap-2">
+                    <button id="lettersBtn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                        حروف Lettere
+                    </button>
+                    <button id="wordsBtn" class="px-6 py-3 rounded-xl text-amber-600 font-semibold hover:bg-amber-50 text-sm transition-all duration-300">
+                        كلمات Parole
+                    </button>
+                </div>
+            </div>
+
+            <!-- Display Mode Selector -->
             <div class="flex justify-center mb-6">
                 <div class="bg-white rounded-lg p-2 shadow-md">
-                    <button id="isolatedBtn" class="px-4 py-2 rounded-md bg-amber-500 text-white font-medium">
-                        منفصلة Isolata
+                    <button id="simpleBtn" class="px-4 py-2 rounded-md bg-orange-500 text-white font-medium">
+                        Semplice
                     </button>
-                    <button id="allFormsBtn" class="px-4 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50">
-                        جميع الأشكال Tutte le forme
+                    <button id="detailedBtn" class="px-4 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50">
+                        Dettagliato
                     </button>
                 </div>
             </div>
 
             <!-- Info -->
-            <div class="text-center mb-6">
-                <p class="text-lg text-gray-600">حروف الهجاء العربية - 28 lettere dell'alfabeto arabo</p>
-                <p id="formInfo" class="text-sm text-gray-500 mt-2">Forma isolata - come appaiono da sole</p>
+            <div class="text-center mb-8">
+                <p id="contentInfo" class="text-xl text-gray-700 font-medium">حروف - Lettere dell'alfabeto arabo</p>
+                <p id="displayInfo" class="text-sm text-gray-500 mt-2">Visualizzazione semplice con romanizzazione</p>
             </div>
 
             <!-- Character Grid -->
-            <div id="characterGrid" class="grid grid-cols-4 md:grid-cols-7 gap-4 max-w-6xl mx-auto">
+            <div id="characterGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 max-w-7xl mx-auto">
                 <!-- Characters will be populated by JavaScript -->
             </div>
         </div>
@@ -85,57 +124,66 @@
                         <button id="recognitionBtn" class="px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm">
                             🔍 Riconoscimento
                         </button>
-                        <button id="writingBtn" class="px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm">
+                        <button id="writingBtn" class="px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm">
                             ✍️ Scrittura
                         </button>
-                        <button id="formsBtn" class="px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm">
-                            📝 Forme
+                        <button id="meaningBtn" class="px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm">
+                            📖 Significati
                         </button>
-                        <button id="connectionBtn" class="px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm">
-                            🔗 Connessioni
+                    </div>
+                </div>
+
+                <!-- Content Type Selector for Practice -->
+                <div class="flex justify-center mb-6">
+                    <div class="bg-white rounded-lg p-2 shadow-md flex flex-wrap gap-1">
+                        <button id="practiceLettersBtn" class="px-3 py-2 rounded-md bg-amber-500 text-white font-medium text-sm">
+                            حروف
+                        </button>
+                        <button id="practiceWordsBtn" class="px-3 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50 text-sm">
+                            كلمات
                         </button>
                     </div>
                 </div>
 
                 <!-- Practice Card -->
                 <div id="practiceCard" class="bg-white rounded-xl shadow-xl p-8 text-center">
-                    <div class="mb-6">
-                        <div id="questionText" class="text-6xl mb-4 arabic-font arabic-text">ا</div>
-                        <div id="questionPrompt" class="text-lg text-gray-600">Come si pronuncia questa lettera?</div>
+                    <div class="mb-8">
+                        <div id="questionText" class="text-7xl mb-6 arabic-font font-bold text-gray-800">ا</div>
+                        <div id="questionPrompt" class="text-lg text-gray-600 font-medium">Come si pronuncia questa lettera?</div>
                     </div>
 
                     <!-- Answer Options -->
-                    <div id="answerOptions" class="grid grid-cols-2 gap-4 mb-6">
+                    <div id="answerOptions" class="grid grid-cols-2 gap-4 mb-8">
                         <!-- Options will be populated by JavaScript -->
                     </div>
 
                     <!-- Writing Input -->
-                    <div id="writingInput" class="hidden mb-6">
+                    <div id="writingInput" class="hidden mb-8">
                         <input type="text" id="writingAnswer" class="w-full p-4 text-center text-2xl border-2 border-gray-300 rounded-lg focus:border-orange-500 focus:outline-none" placeholder="Scrivi la traslitterazione...">
                     </div>
 
                     <!-- Feedback -->
-                    <div id="feedback" class="hidden mb-6 p-4 rounded-lg">
+                    <div id="feedback" class="hidden mb-8 p-4 rounded-lg">
                         <div id="feedbackText" class="text-lg font-medium"></div>
                     </div>
 
                     <!-- Controls -->
                     <div class="flex justify-center space-x-4">
-                        <button id="nextBtn" class="px-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors">
+                        <button id="nextBtn" class="px-6 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors">
                             Prossimo →
                         </button>
-                        <button id="checkBtn" class="hidden px-6 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors">
+                        <button id="checkBtn" class="hidden px-6 py-3 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors">
                             Controlla
                         </button>
                     </div>
 
                     <!-- Score and Progress -->
-                    <div class="mt-6 space-y-2">
+                    <div class="mt-8 space-y-2">
                         <div class="text-sm text-gray-600">
                             Punteggio: <span id="score">0</span>/<span id="total">0</span>
                         </div>
                         <div class="text-xs text-gray-500">
-                            <span id="exerciseInfo">Alfabeto Arabo: 28 lettere disponibili</span>
+                            <span id="exerciseInfo">Lettere: 28 caratteri disponibili</span>
                         </div>
                     </div>
                 </div>
@@ -144,46 +192,207 @@
     </div>
 
     <script>
-        // Arabic alphabet data with all forms
-        const arabicLetters = {
-            'ا': { name: 'alif', isolated: 'ا', initial: 'ا', medial: 'ـا', final: 'ـا' },
-            'ب': { name: 'ba', isolated: 'ب', initial: 'بـ', medial: 'ـبـ', final: 'ـب' },
-            'ت': { name: 'ta', isolated: 'ت', initial: 'تـ', medial: 'ـتـ', final: 'ـت' },
-            'ث': { name: 'tha', isolated: 'ث', initial: 'ثـ', medial: 'ـثـ', final: 'ـث' },
-            'ج': { name: 'jim', isolated: 'ج', initial: 'جـ', medial: 'ـجـ', final: 'ـج' },
-            'ح': { name: 'ha', isolated: 'ح', initial: 'حـ', medial: 'ـحـ', final: 'ـح' },
-            'خ': { name: 'kha', isolated: 'خ', initial: 'خـ', medial: 'ـخـ', final: 'ـخ' },
-            'د': { name: 'dal', isolated: 'د', initial: 'د', medial: 'ـد', final: 'ـد' },
-            'ذ': { name: 'dhal', isolated: 'ذ', initial: 'ذ', medial: 'ـذ', final: 'ـذ' },
-            'ر': { name: 'ra', isolated: 'ر', initial: 'ر', medial: 'ـر', final: 'ـر' },
-            'ز': { name: 'za', isolated: 'ز', initial: 'ز', medial: 'ـز', final: 'ـز' },
-            'س': { name: 'sin', isolated: 'س', initial: 'سـ', medial: 'ـسـ', final: 'ـس' },
-            'ش': { name: 'shin', isolated: 'ش', initial: 'شـ', medial: 'ـشـ', final: 'ـش' },
-            'ص': { name: 'sad', isolated: 'ص', initial: 'صـ', medial: 'ـصـ', final: 'ـص' },
-            'ض': { name: 'dad', isolated: 'ض', initial: 'ضـ', medial: 'ـضـ', final: 'ـض' },
-            'ط': { name: 'ta', isolated: 'ط', initial: 'طـ', medial: 'ـطـ', final: 'ـط' },
-            'ظ': { name: 'za', isolated: 'ظ', initial: 'ظـ', medial: 'ـظـ', final: 'ـظ' },
-            'ع': { name: 'ain', isolated: 'ع', initial: 'عـ', medial: 'ـعـ', final: 'ـع' },
-            'غ': { name: 'ghain', isolated: 'غ', initial: 'غـ', medial: 'ـغـ', final: 'ـغ' },
-            'ف': { name: 'fa', isolated: 'ف', initial: 'فـ', medial: 'ـفـ', final: 'ـف' },
-            'ق': { name: 'qaf', isolated: 'ق', initial: 'قـ', medial: 'ـقـ', final: 'ـق' },
-            'ك': { name: 'kaf', isolated: 'ك', initial: 'كـ', medial: 'ـكـ', final: 'ـك' },
-            'ل': { name: 'lam', isolated: 'ل', initial: 'لـ', medial: 'ـلـ', final: 'ـل' },
-            'م': { name: 'mim', isolated: 'م', initial: 'مـ', medial: 'ـمـ', final: 'ـم' },
-            'ن': { name: 'nun', isolated: 'ن', initial: 'نـ', medial: 'ـنـ', final: 'ـن' },
-            'ه': { name: 'ha', isolated: 'ه', initial: 'هـ', medial: 'ـهـ', final: 'ـه' },
-            'و': { name: 'waw', isolated: 'و', initial: 'و', medial: 'ـو', final: 'ـو' },
-            'ي': { name: 'ya', isolated: 'ي', initial: 'يـ', medial: 'ـيـ', final: 'ـي' }
+        // Arabic alphabet data
+        const letters = {
+            'ا': { 
+                romanization: 'alif', 
+                name: 'alif', 
+                type: 'vowel',
+                forms: { isolated: 'ا', initial: 'ا', medial: 'ـا', final: 'ـا' }
+            },
+            'ب': { 
+                romanization: 'ba', 
+                name: 'ba', 
+                type: 'consonant',
+                forms: { isolated: 'ب', initial: 'بـ', medial: 'ـبـ', final: 'ـب' }
+            },
+            'ت': { 
+                romanization: 'ta', 
+                name: 'ta', 
+                type: 'consonant',
+                forms: { isolated: 'ت', initial: 'تـ', medial: 'ـتـ', final: 'ـت' }
+            },
+            'ث': { 
+                romanization: 'tha', 
+                name: 'tha', 
+                type: 'consonant',
+                forms: { isolated: 'ث', initial: 'ثـ', medial: 'ـثـ', final: 'ـث' }
+            },
+            'ج': { 
+                romanization: 'jim', 
+                name: 'jim', 
+                type: 'consonant',
+                forms: { isolated: 'ج', initial: 'جـ', medial: 'ـجـ', final: 'ـج' }
+            },
+            'ح': { 
+                romanization: 'ha', 
+                name: 'ha', 
+                type: 'consonant',
+                forms: { isolated: 'ح', initial: 'حـ', medial: 'ـحـ', final: 'ـح' }
+            },
+            'خ': { 
+                romanization: 'kha', 
+                name: 'kha', 
+                type: 'consonant',
+                forms: { isolated: 'خ', initial: 'خـ', medial: 'ـخـ', final: 'ـخ' }
+            },
+            'د': { 
+                romanization: 'dal', 
+                name: 'dal', 
+                type: 'consonant',
+                forms: { isolated: 'د', initial: 'د', medial: 'ـد', final: 'ـد' }
+            },
+            'ذ': { 
+                romanization: 'dhal', 
+                name: 'dhal', 
+                type: 'consonant',
+                forms: { isolated: 'ذ', initial: 'ذ', medial: 'ـذ', final: 'ـذ' }
+            },
+            'ر': { 
+                romanization: 'ra', 
+                name: 'ra', 
+                type: 'consonant',
+                forms: { isolated: 'ر', initial: 'ر', medial: 'ـر', final: 'ـر' }
+            },
+            'ز': { 
+                romanization: 'zay', 
+                name: 'zay', 
+                type: 'consonant',
+                forms: { isolated: 'ز', initial: 'ز', medial: 'ـز', final: 'ـز' }
+            },
+            'س': { 
+                romanization: 'sin', 
+                name: 'sin', 
+                type: 'consonant',
+                forms: { isolated: 'س', initial: 'سـ', medial: 'ـسـ', final: 'ـس' }
+            },
+            'ش': { 
+                romanization: 'shin', 
+                name: 'shin', 
+                type: 'consonant',
+                forms: { isolated: 'ش', initial: 'شـ', medial: 'ـشـ', final: 'ـش' }
+            },
+            'ص': { 
+                romanization: 'sad', 
+                name: 'sad', 
+                type: 'consonant',
+                forms: { isolated: 'ص', initial: 'صـ', medial: 'ـصـ', final: 'ـص' }
+            },
+            'ض': { 
+                romanization: 'dad', 
+                name: 'dad', 
+                type: 'consonant',
+                forms: { isolated: 'ض', initial: 'ضـ', medial: 'ـضـ', final: 'ـض' }
+            },
+            'ط': { 
+                romanization: 'ta', 
+                name: 'ta (emphatic)', 
+                type: 'consonant',
+                forms: { isolated: 'ط', initial: 'طـ', medial: 'ـطـ', final: 'ـط' }
+            },
+            'ظ': { 
+                romanization: 'za', 
+                name: 'za (emphatic)', 
+                type: 'consonant',
+                forms: { isolated: 'ظ', initial: 'ظـ', medial: 'ـظـ', final: 'ـظ' }
+            },
+            'ع': { 
+                romanization: 'ayn', 
+                name: 'ayn', 
+                type: 'consonant',
+                forms: { isolated: 'ع', initial: 'عـ', medial: 'ـعـ', final: 'ـع' }
+            },
+            'غ': { 
+                romanization: 'ghayn', 
+                name: 'ghayn', 
+                type: 'consonant',
+                forms: { isolated: 'غ', initial: 'غـ', medial: 'ـغـ', final: 'ـغ' }
+            },
+            'ف': { 
+                romanization: 'fa', 
+                name: 'fa', 
+                type: 'consonant',
+                forms: { isolated: 'ف', initial: 'فـ', medial: 'ـفـ', final: 'ـف' }
+            },
+            'ق': { 
+                romanization: 'qaf', 
+                name: 'qaf', 
+                type: 'consonant',
+                forms: { isolated: 'ق', initial: 'قـ', medial: 'ـقـ', final: 'ـق' }
+            },
+            'ك': { 
+                romanization: 'kaf', 
+                name: 'kaf', 
+                type: 'consonant',
+                forms: { isolated: 'ك', initial: 'كـ', medial: 'ـكـ', final: 'ـك' }
+            },
+            'ل': { 
+                romanization: 'lam', 
+                name: 'lam', 
+                type: 'consonant',
+                forms: { isolated: 'ل', initial: 'لـ', medial: 'ـلـ', final: 'ـل' }
+            },
+            'م': { 
+                romanization: 'mim', 
+                name: 'mim', 
+                type: 'consonant',
+                forms: { isolated: 'م', initial: 'مـ', medial: 'ـمـ', final: 'ـم' }
+            },
+            'ن': { 
+                romanization: 'nun', 
+                name: 'nun', 
+                type: 'consonant',
+                forms: { isolated: 'ن', initial: 'نـ', medial: 'ـنـ', final: 'ـن' }
+            },
+            'ه': { 
+                romanization: 'ha', 
+                name: 'ha (final)', 
+                type: 'consonant',
+                forms: { isolated: 'ه', initial: 'هـ', medial: 'ـهـ', final: 'ـه' }
+            },
+            'و': { 
+                romanization: 'waw', 
+                name: 'waw', 
+                type: 'consonant',
+                forms: { isolated: 'و', initial: 'و', medial: 'ـو', final: 'ـو' }
+            },
+            'ي': { 
+                romanization: 'ya', 
+                name: 'ya', 
+                type: 'consonant',
+                forms: { isolated: 'ي', initial: 'يـ', medial: 'ـيـ', final: 'ـي' }
+            }
         };
 
-        // Exercise types
-        const exerciseTypes = ['recognition', 'writing', 'forms', 'connection'];
-        let currentExerciseType = 'recognition';
+        const words = {
+            'كتاب': { romanization: 'kitab', meaning: 'libro', category: 'objects' },
+            'بيت': { romanization: 'bayt', meaning: 'casa', category: 'places' },
+            'ماء': { romanization: 'ma\'', meaning: 'acqua', category: 'nature' },
+            'شمس': { romanization: 'shams', meaning: 'sole', category: 'nature' },
+            'قمر': { romanization: 'qamar', meaning: 'luna', category: 'nature' },
+            'ولد': { romanization: 'walad', meaning: 'ragazzo', category: 'people' },
+            'بنت': { romanization: 'bint', meaning: 'ragazza', category: 'people' },
+            'أب': { romanization: 'ab', meaning: 'padre', category: 'family' },
+            'أم': { romanization: 'umm', meaning: 'madre', category: 'family' },
+            'مدرسة': { romanization: 'madrasa', meaning: 'scuola', category: 'places' },
+            'طعام': { romanization: 'ta\'am', meaning: 'cibo', category: 'food' },
+            'خبز': { romanization: 'khubz', meaning: 'pane', category: 'food' },
+            'لبن': { romanization: 'laban', meaning: 'latte', category: 'food' },
+            'سيارة': { romanization: 'sayyara', meaning: 'auto', category: 'transport' },
+            'طائرة': { romanization: 'ta\'ira', meaning: 'aereo', category: 'transport' },
+            'حب': { romanization: 'hubb', meaning: 'amore', category: 'emotions' },
+            'سلام': { romanization: 'salam', meaning: 'pace', category: 'abstract' },
+            'صديق': { romanization: 'sadiq', meaning: 'amico', category: 'people' },
+            'عمل': { romanization: 'amal', meaning: 'lavoro', category: 'activities' },
+            'وقت': { romanization: 'waqt', meaning: 'tempo', category: 'abstract' }
+        };
 
         // State
+        let currentContent = 'letters';
         let currentMode = 'study';
+        let displayMode = 'simple';
         let practiceMode = 'recognition';
-        let studyMode = 'isolated'; // 'isolated' or 'allForms'
+        let practiceContent = 'letters';
         let currentQuestion = null;
         let score = 0;
         let total = 0;
@@ -193,14 +402,18 @@
         const practiceBtn = document.getElementById('practiceBtn');
         const studySection = document.getElementById('studySection');
         const practiceSection = document.getElementById('practiceSection');
-        const isolatedBtn = document.getElementById('isolatedBtn');
-        const allFormsBtn = document.getElementById('allFormsBtn');
-        const formInfo = document.getElementById('formInfo');
+        const lettersBtn = document.getElementById('lettersBtn');
+        const wordsBtn = document.getElementById('wordsBtn');
+        const simpleBtn = document.getElementById('simpleBtn');
+        const detailedBtn = document.getElementById('detailedBtn');
+        const contentInfo = document.getElementById('contentInfo');
+        const displayInfo = document.getElementById('displayInfo');
         const characterGrid = document.getElementById('characterGrid');
         const recognitionBtn = document.getElementById('recognitionBtn');
         const writingBtn = document.getElementById('writingBtn');
-        const formsBtn = document.getElementById('formsBtn');
-        const connectionBtn = document.getElementById('connectionBtn');
+        const meaningBtn = document.getElementById('meaningBtn');
+        const practiceLettersBtn = document.getElementById('practiceLettersBtn');
+        const practiceWordsBtn = document.getElementById('practiceWordsBtn');
         const practiceCard = document.getElementById('practiceCard');
         const questionText = document.getElementById('questionText');
         const questionPrompt = document.getElementById('questionPrompt');
@@ -218,12 +431,15 @@
         // Event listeners
         studyBtn.addEventListener('click', () => switchMode('study'));
         practiceBtn.addEventListener('click', () => switchMode('practice'));
-        isolatedBtn.addEventListener('click', () => switchStudyMode('isolated'));
-        allFormsBtn.addEventListener('click', () => switchStudyMode('allForms'));
+        lettersBtn.addEventListener('click', () => switchContent('letters'));
+        wordsBtn.addEventListener('click', () => switchContent('words'));
+        simpleBtn.addEventListener('click', () => switchDisplayMode('simple'));
+        detailedBtn.addEventListener('click', () => switchDisplayMode('detailed'));
         recognitionBtn.addEventListener('click', () => switchPracticeMode('recognition'));
         writingBtn.addEventListener('click', () => switchPracticeMode('writing'));
-        formsBtn.addEventListener('click', () => switchPracticeMode('forms'));
-        connectionBtn.addEventListener('click', () => switchPracticeMode('connection'));
+        meaningBtn.addEventListener('click', () => switchPracticeMode('meaning'));
+        practiceLettersBtn.addEventListener('click', () => switchPracticeContent('letters'));
+        practiceWordsBtn.addEventListener('click', () => switchPracticeContent('words'));
         nextBtn.addEventListener('click', nextQuestion);
         checkBtn.addEventListener('click', checkWritingAnswer);
         writingAnswer.addEventListener('keypress', (e) => {
@@ -234,99 +450,160 @@
         function switchMode(mode) {
             currentMode = mode;
             if (mode === 'study') {
-                studyBtn.className = 'px-6 py-3 rounded-full bg-amber-600 text-white font-medium transition-all';
-                practiceBtn.className = 'px-6 py-3 rounded-full text-amber-600 font-medium transition-all hover:bg-amber-50';
+                studyBtn.className = 'px-8 py-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105';
+                practiceBtn.className = 'px-8 py-4 rounded-xl text-amber-600 font-semibold transition-all duration-300 hover:bg-amber-50 hover:text-amber-700';
                 studySection.classList.remove('hidden');
                 practiceSection.classList.add('hidden');
                 renderCharacterGrid();
             } else {
-                practiceBtn.className = 'px-6 py-3 rounded-full bg-amber-600 text-white font-medium transition-all';
-                studyBtn.className = 'px-6 py-3 rounded-full text-amber-600 font-medium transition-all hover:bg-amber-50';
+                practiceBtn.className = 'px-8 py-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105';
+                studyBtn.className = 'px-8 py-4 rounded-xl text-amber-600 font-semibold transition-all duration-300 hover:bg-amber-50 hover:text-amber-700';
                 studySection.classList.add('hidden');
                 practiceSection.classList.remove('hidden');
                 startPractice();
             }
         }
 
-        function switchStudyMode(mode) {
-            studyMode = mode;
-            if (mode === 'isolated') {
-                isolatedBtn.className = 'px-4 py-2 rounded-md bg-amber-500 text-white font-medium';
-                allFormsBtn.className = 'px-4 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50';
-                formInfo.textContent = 'Forma isolata - come appaiono da sole';
+        function switchContent(content) {
+            currentContent = content;
+            // Reset buttons
+            lettersBtn.className = 'px-6 py-3 rounded-xl text-amber-600 font-semibold hover:bg-amber-50 text-sm transition-all duration-300';
+            wordsBtn.className = 'px-6 py-3 rounded-xl text-amber-600 font-semibold hover:bg-amber-50 text-sm transition-all duration-300';
+            
+            if (content === 'letters') {
+                lettersBtn.className = 'px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105';
+                contentInfo.textContent = 'حروف - Lettere dell\'alfabeto arabo';
+            } else if (content === 'words') {
+                wordsBtn.className = 'px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105';
+                contentInfo.textContent = 'كلمات - Parole comuni arabe';
+            }
+            renderCharacterGrid();
+        }
+
+        function switchDisplayMode(mode) {
+            displayMode = mode;
+            if (mode === 'simple') {
+                simpleBtn.className = 'px-4 py-2 rounded-md bg-orange-500 text-white font-medium';
+                detailedBtn.className = 'px-4 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50';
+                displayInfo.textContent = 'Visualizzazione semplice con romanizzazione';
             } else {
-                allFormsBtn.className = 'px-4 py-2 rounded-md bg-amber-500 text-white font-medium';
-                isolatedBtn.className = 'px-4 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50';
-                formInfo.textContent = 'Tutte le forme - isolata, iniziale, mediana, finale';
+                detailedBtn.className = 'px-4 py-2 rounded-md bg-orange-500 text-white font-medium';
+                simpleBtn.className = 'px-4 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50';
+                displayInfo.textContent = 'Visualizzazione dettagliata con tutte le forme delle lettere';
             }
             renderCharacterGrid();
         }
 
         function switchPracticeMode(mode) {
             practiceMode = mode;
-            // Reset all buttons
-            recognitionBtn.className = 'px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm';
-            writingBtn.className = 'px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm';
-            formsBtn.className = 'px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm';
-            connectionBtn.className = 'px-3 py-2 rounded-md text-orange-500 font-medium hover:bg-orange-50 text-sm';
+            // Reset buttons
+            recognitionBtn.className = 'px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm';
+            writingBtn.className = 'px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm';
+            meaningBtn.className = 'px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm';
             
-            // Highlight active button
             if (mode === 'recognition') {
                 recognitionBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
             } else if (mode === 'writing') {
                 writingBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
-            } else if (mode === 'forms') {
-                formsBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
-            } else if (mode === 'connection') {
-                connectionBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
+            } else if (mode === 'meaning') {
+                meaningBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
             }
+            startPractice();
+        }
+
+        function switchPracticeContent(content) {
+            practiceContent = content;
+            // Reset buttons
+            practiceLettersBtn.className = 'px-3 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50 text-sm';
+            practiceWordsBtn.className = 'px-3 py-2 rounded-md text-amber-500 font-medium hover:bg-amber-50 text-sm';
+            
+            if (content === 'letters') {
+                practiceLettersBtn.className = 'px-3 py-2 rounded-md bg-amber-500 text-white font-medium text-sm';
+            } else if (content === 'words') {
+                practiceWordsBtn.className = 'px-3 py-2 rounded-md bg-amber-500 text-white font-medium text-sm';
+            }
+            updateExerciseInfo();
             startPractice();
         }
 
         function renderCharacterGrid() {
             characterGrid.innerHTML = '';
+            let data;
             
-            Object.entries(arabicLetters).forEach(([letter, data]) => {
+            if (currentContent === 'letters') {
+                data = letters;
+            } else if (currentContent === 'words') {
+                data = words;
+            }
+            
+            Object.entries(data).forEach(([char, info]) => {
                 const card = document.createElement('div');
                 
-                if (studyMode === 'isolated') {
-                    card.className = 'bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow cursor-pointer card-flip min-h-[130px] flex flex-col justify-center';
-                    card.innerHTML = `
-                        <div class="card-front">
-                            <div class="text-6xl mb-3 arabic-font font-bold text-black arabic-text">${data.isolated}</div>
-                            <div class="text-lg font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">${data.name}</div>
-                        </div>
-                        <div class="card-back bg-orange-50 rounded-lg p-6 flex flex-col justify-center">
-                            <div class="text-3xl mb-3 text-orange-700 font-bold">${data.name}</div>
-                            <div class="text-5xl arabic-font font-bold text-orange-600 arabic-text">${data.isolated}</div>
-                        </div>
-                    `;
+                if (displayMode === 'simple') {
+                    card.className = 'character-card rounded-xl p-8 text-center transition-all duration-300 cursor-pointer flex flex-col justify-center';
+                    
+                    if (currentContent === 'words') {
+                        card.innerHTML = `
+                            <div class="flex flex-col items-center space-y-5">
+                                <div class="text-7xl arabic-font font-bold text-gray-800">${char}</div>
+                                <div class="romanization-badge">${info.romanization}</div>
+                                <div class="meaning-badge">${info.meaning}</div>
+                            </div>
+                        `;
+                    } else {
+                        card.innerHTML = `
+                            <div class="flex flex-col items-center space-y-5">
+                                <div class="text-7xl arabic-font font-bold text-gray-800">${char}</div>
+                                <div class="romanization-badge">${info.romanization}</div>
+                                <div class="type-badge">${info.type}</div>
+                            </div>
+                        `;
+                    }
                 } else {
-                    card.className = 'bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition-shadow cursor-pointer card-flip min-h-[160px] flex flex-col justify-center';
-                    card.innerHTML = `
-                        <div class="card-front">
-                            <div class="text-4xl mb-2 arabic-font font-bold text-black arabic-text">${data.isolated}</div>
-                            <div class="text-sm font-semibold text-gray-700 bg-gray-100 px-2 py-1 rounded-full mb-2">${data.name}</div>
-                            <div class="grid grid-cols-2 gap-1 text-xs text-gray-600">
-                                <div>Iniz: <span class="arabic-font text-lg">${data.initial}</span></div>
-                                <div>Med: <span class="arabic-font text-lg">${data.medial}</span></div>
-                                <div>Fin: <span class="arabic-font text-lg">${data.final}</span></div>
-                                <div>Isol: <span class="arabic-font text-lg">${data.isolated}</span></div>
+                    card.className = 'character-card detailed-card rounded-xl p-6 text-center transition-all duration-300 cursor-pointer flex flex-col justify-center';
+                    
+                    if (currentContent === 'words') {
+                        card.innerHTML = `
+                            <div class="flex flex-col items-center space-y-4">
+                                <div class="text-6xl arabic-font font-bold text-gray-800">${char}</div>
+                                <div class="romanization-badge">${info.romanization}</div>
+                                <div class="meaning-badge">${info.meaning}</div>
+                                <div class="type-badge">${info.category}</div>
                             </div>
-                        </div>
-                        <div class="card-back bg-orange-50 rounded-lg p-4 flex flex-col justify-center">
-                            <div class="text-2xl mb-2 text-orange-700 font-bold">${data.name}</div>
-                            <div class="text-4xl arabic-font font-bold text-orange-600 arabic-text mb-2">${data.isolated}</div>
-                            <div class="text-xs text-orange-600">
-                                <div class="arabic-font text-sm">${data.initial} ${data.medial} ${data.final}</div>
+                        `;
+                    } else {
+                        card.innerHTML = `
+                            <div class="flex flex-col items-center space-y-4">
+                                <div class="text-6xl arabic-font font-bold text-gray-800">${char}</div>
+                                <div class="romanization-badge">${info.romanization}</div>
+                                <div class="bg-gradient-to-r from-purple-400 to-pink-400 text-white px-4 py-2 rounded-full text-sm font-bold">${info.name}</div>
+                                <div class="type-badge">${info.type}</div>
+                                ${info.forms ? `
+                                    <div class="w-full bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 border border-amber-200">
+                                        <div class="grid grid-cols-2 gap-4 text-sm">
+                                            <div class="text-center">
+                                                <div class="text-gray-600 font-medium mb-2">Isolata</div>
+                                                <div class="arabic-font text-3xl text-amber-700 bg-white rounded-lg py-2 shadow-sm">${info.forms.isolated}</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-gray-600 font-medium mb-2">Iniziale</div>
+                                                <div class="arabic-font text-3xl text-amber-700 bg-white rounded-lg py-2 shadow-sm">${info.forms.initial}</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-gray-600 font-medium mb-2">Mediana</div>
+                                                <div class="arabic-font text-3xl text-amber-700 bg-white rounded-lg py-2 shadow-sm">${info.forms.medial}</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-gray-600 font-medium mb-2">Finale</div>
+                                                <div class="arabic-font text-3xl text-amber-700 bg-white rounded-lg py-2 shadow-sm">${info.forms.final}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ` : ''}
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 }
-                
-                card.addEventListener('click', () => {
-                    card.classList.toggle('flipped');
-                });
                 
                 characterGrid.appendChild(card);
             });
@@ -336,16 +613,24 @@
             score = 0;
             total = 0;
             updateScore();
+            updateExerciseInfo();
             nextQuestion();
         }
 
         function nextQuestion() {
-            const letterArray = Object.entries(arabicLetters);
-            const randomLetter = letterArray[Math.floor(Math.random() * letterArray.length)];
+            let data;
+            if (practiceContent === 'letters') {
+                data = letters;
+            } else if (practiceContent === 'words') {
+                data = words;
+            }
+            
+            const charArray = Object.entries(data);
+            const randomChar = charArray[Math.floor(Math.random() * charArray.length)];
             
             currentQuestion = {
-                letter: randomLetter[0],
-                data: randomLetter[1]
+                char: randomChar[0],
+                data: randomChar[1]
             };
 
             feedback.classList.add('hidden');
@@ -354,48 +639,63 @@
                 setupRecognitionQuestion();
             } else if (practiceMode === 'writing') {
                 setupWritingQuestion();
-            } else if (practiceMode === 'forms') {
-                setupFormsQuestion();
-            } else if (practiceMode === 'connection') {
-                setupConnectionQuestion();
+            } else if (practiceMode === 'meaning') {
+                setupMeaningQuestion();
             }
         }
 
         function setupRecognitionQuestion() {
-            questionText.textContent = currentQuestion.data.isolated;
-            questionPrompt.textContent = 'Come si pronuncia questa lettera?';
+            questionText.textContent = currentQuestion.char;
+            
+            if (practiceContent === 'letters') {
+                questionPrompt.textContent = 'Come si pronuncia questa lettera?';
+            } else {
+                questionPrompt.textContent = 'Come si pronuncia questa parola?';
+            }
+            
             answerOptions.classList.remove('hidden');
             writingInput.classList.add('hidden');
             nextBtn.classList.remove('hidden');
             checkBtn.classList.add('hidden');
 
-            // Generate options
-            const allNames = Object.values(arabicLetters).map(data => data.name);
-            const options = [currentQuestion.data.name];
+            let correctAnswer = currentQuestion.data.romanization;
+            let allAnswers;
             
+            if (practiceContent === 'letters') {
+                allAnswers = Object.values(letters).map(l => l.romanization);
+            } else {
+                allAnswers = Object.values(words).map(w => w.romanization);
+            }
+
+            const options = [correctAnswer];
             while (options.length < 4) {
-                const randomName = allNames[Math.floor(Math.random() * allNames.length)];
-                if (!options.includes(randomName)) {
-                    options.push(randomName);
+                const randomAnswer = allAnswers[Math.floor(Math.random() * allAnswers.length)];
+                if (!options.includes(randomAnswer)) {
+                    options.push(randomAnswer);
                 }
             }
             
-            // Shuffle options
             options.sort(() => Math.random() - 0.5);
             
             answerOptions.innerHTML = '';
             options.forEach(option => {
                 const button = document.createElement('button');
-                button.className = 'p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium';
+                button.className = 'p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium text-lg';
                 button.textContent = option;
-                button.addEventListener('click', () => checkRecognitionAnswer(option));
+                button.addEventListener('click', () => checkRecognitionAnswer(option, correctAnswer));
                 answerOptions.appendChild(button);
             });
         }
 
         function setupWritingQuestion() {
-            questionText.textContent = currentQuestion.data.isolated;
-            questionPrompt.textContent = 'Scrivi la traslitterazione di questa lettera:';
+            questionText.textContent = currentQuestion.char;
+            
+            if (practiceContent === 'letters') {
+                questionPrompt.textContent = 'Scrivi la traslitterazione di questa lettera:';
+            } else {
+                questionPrompt.textContent = 'Scrivi la traslitterazione di questa parola:';
+            }
+            
             answerOptions.classList.add('hidden');
             writingInput.classList.remove('hidden');
             nextBtn.classList.add('hidden');
@@ -404,135 +704,62 @@
             writingAnswer.focus();
         }
 
-        function setupFormsQuestion() {
-            const forms = ['initial', 'medial', 'final', 'isolated'];
-            const randomForm = forms[Math.floor(Math.random() * forms.length)];
-            const formNames = {
-                'initial': 'iniziale',
-                'medial': 'mediana', 
-                'final': 'finale',
-                'isolated': 'isolata'
-            };
-            
-            questionText.textContent = currentQuestion.data[randomForm];
-            questionPrompt.textContent = `Quale lettera è questa in forma ${formNames[randomForm]}?`;
-            answerOptions.classList.remove('hidden');
-            writingInput.classList.add('hidden');
-            nextBtn.classList.remove('hidden');
-            checkBtn.classList.add('hidden');
-
-            // Generate options
-            const allNames = Object.values(arabicLetters).map(data => data.name);
-            const options = [currentQuestion.data.name];
-            
-            while (options.length < 4) {
-                const randomName = allNames[Math.floor(Math.random() * allNames.length)];
-                if (!options.includes(randomName)) {
-                    options.push(randomName);
+        function setupMeaningQuestion() {
+            if (practiceContent === 'words' && currentQuestion.data.meaning) {
+                questionText.textContent = currentQuestion.char;
+                questionPrompt.textContent = 'Qual è il significato di questa parola?';
+                
+                const correctAnswer = currentQuestion.data.meaning;
+                const allAnswers = Object.values(words).map(w => w.meaning);
+                
+                const options = [correctAnswer];
+                while (options.length < 4) {
+                    const randomAnswer = allAnswers[Math.floor(Math.random() * allAnswers.length)];
+                    if (!options.includes(randomAnswer)) {
+                        options.push(randomAnswer);
+                    }
                 }
-            }
-            
-            // Shuffle options
-            options.sort(() => Math.random() - 0.5);
-            
-            answerOptions.innerHTML = '';
-            options.forEach(option => {
-                const button = document.createElement('button');
-                button.className = 'p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium';
-                button.textContent = option;
-                button.addEventListener('click', () => checkRecognitionAnswer(option));
-                answerOptions.appendChild(button);
-            });
-        }
-
-        function setupConnectionQuestion() {
-            // Show a letter and ask which form connects to the next letter
-            const connectingLetters = Object.entries(arabicLetters).filter(([letter, data]) => 
-                data.initial !== data.isolated || data.medial !== data.isolated
-            );
-            
-            if (connectingLetters.length === 0) {
+                
+                options.sort(() => Math.random() - 0.5);
+                
+                answerOptions.classList.remove('hidden');
+                writingInput.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+                checkBtn.classList.add('hidden');
+                
+                answerOptions.innerHTML = '';
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm';
+                    button.textContent = option;
+                    button.addEventListener('click', () => checkRecognitionAnswer(option, correctAnswer));
+                    answerOptions.appendChild(button);
+                });
+            } else {
                 setupRecognitionQuestion();
-                return;
             }
-            
-            const randomConnecting = connectingLetters[Math.floor(Math.random() * connectingLetters.length)];
-            currentQuestion = { letter: randomConnecting[0], data: randomConnecting[1] };
-            
-            questionText.innerHTML = `${currentQuestion.data.isolated} + ل = ?`;
-            questionPrompt.textContent = 'Come si scrive questa lettera quando si connette alla lettera successiva?';
-            answerOptions.classList.remove('hidden');
-            writingInput.classList.add('hidden');
-            nextBtn.classList.remove('hidden');
-            checkBtn.classList.add('hidden');
-
-            const options = [
-                currentQuestion.data.initial + 'ل',
-                currentQuestion.data.isolated + 'ل',
-                currentQuestion.data.medial + 'ل',
-                currentQuestion.data.final + 'ل'
-            ];
-            
-            // Shuffle options
-            options.sort(() => Math.random() - 0.5);
-            
-            answerOptions.innerHTML = '';
-            options.forEach(option => {
-                const button = document.createElement('button');
-                button.className = 'p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium arabic-font text-xl';
-                button.textContent = option;
-                button.addEventListener('click', () => checkConnectionAnswer(option));
-                answerOptions.appendChild(button);
-            });
         }
 
-        function checkRecognitionAnswer(selected) {
+        function checkRecognitionAnswer(selected, correct) {
             total++;
-            const isCorrect = selected === currentQuestion.data.name;
+            const isCorrect = selected === correct;
             
             if (isCorrect) {
                 score++;
                 showFeedback('صحيح! 🎉 (Corretto!)', 'bg-green-100 text-green-800');
             } else {
-                showFeedback(`خطأ. La risposta corretta è: ${currentQuestion.data.name}`, 'bg-red-100 text-red-800');
+                showFeedback(`خطأ. La risposta corretta è: ${correct}`, 'bg-red-100 text-red-800');
             }
             
             updateScore();
             
-            // Disable all option buttons
             const buttons = answerOptions.querySelectorAll('button');
             buttons.forEach(btn => {
                 btn.disabled = true;
-                if (btn.textContent === currentQuestion.data.name) {
-                    btn.className = 'p-3 bg-green-200 rounded-lg font-medium';
+                if (btn.textContent === correct) {
+                    btn.className = btn.className.replace('bg-gray-100', 'bg-green-200');
                 } else if (btn.textContent === selected && !isCorrect) {
-                    btn.className = 'p-3 bg-red-200 rounded-lg font-medium';
-                }
-            });
-        }
-
-        function checkConnectionAnswer(selected) {
-            total++;
-            const correctAnswer = currentQuestion.data.initial + 'ل';
-            const isCorrect = selected === correctAnswer;
-            
-            if (isCorrect) {
-                score++;
-                showFeedback('صحيح! 🎉 (Corretto!)', 'bg-green-100 text-green-800');
-            } else {
-                showFeedback(`خطأ. La risposta corretta è: ${correctAnswer}`, 'bg-red-100 text-red-800');
-            }
-            
-            updateScore();
-            
-            // Disable all option buttons
-            const buttons = answerOptions.querySelectorAll('button');
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                if (btn.textContent === correctAnswer) {
-                    btn.className = 'p-3 bg-green-200 rounded-lg font-medium arabic-font text-xl';
-                } else if (btn.textContent === selected && !isCorrect) {
-                    btn.className = 'p-3 bg-red-200 rounded-lg font-medium arabic-font text-xl';
+                    btn.className = btn.className.replace('bg-gray-100', 'bg-red-200');
                 }
             });
         }
@@ -541,11 +768,13 @@
             const userAnswer = writingAnswer.value.toLowerCase().trim();
             total++;
             
-            if (userAnswer === currentQuestion.data.name) {
+            const correctAnswer = currentQuestion.data.romanization.toLowerCase();
+            
+            if (userAnswer === correctAnswer) {
                 score++;
                 showFeedback('صحيح! 🎉 (Corretto!)', 'bg-green-100 text-green-800');
             } else {
-                showFeedback(`خطأ. La risposta corretta è: ${currentQuestion.data.name}`, 'bg-red-100 text-red-800');
+                showFeedback(`خطأ. La risposta corretta è: ${correctAnswer}`, 'bg-red-100 text-red-800');
             }
             
             updateScore();
@@ -555,7 +784,7 @@
 
         function showFeedback(message, className) {
             feedbackText.textContent = message;
-            feedback.className = `mb-6 p-4 rounded-lg ${className}`;
+            feedback.className = `mb-8 p-4 rounded-lg ${className}`;
             feedback.classList.remove('hidden');
         }
 
@@ -564,8 +793,24 @@
             totalSpan.textContent = total;
         }
 
+        function updateExerciseInfo() {
+            let count;
+            let contentName;
+            
+            if (practiceContent === 'letters') {
+                count = Object.keys(letters).length;
+                contentName = 'Lettere';
+            } else if (practiceContent === 'words') {
+                count = Object.keys(words).length;
+                contentName = 'Parole';
+            }
+            
+            exerciseInfo.textContent = `${contentName}: ${count} elementi disponibili`;
+        }
+
         // Initialize
         renderCharacterGrid();
+        updateExerciseInfo();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f7f352d71cc724',t:'MTc1NTI1MzEzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'970ca82ab487ee99',t:'MTc1NTQ3MDI1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
