@@ -130,6 +130,9 @@
                         <button id="meaningBtn" class="px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm">
                             📖 Significati
                         </button>
+                        <button id="combinationBtn" class="px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm">
+                            🔗 Combinazioni
+                        </button>
                     </div>
                 </div>
 
@@ -387,6 +390,19 @@
             'وقت': { romanization: 'waqt', meaning: 'tempo', category: 'abstract' }
         };
 
+        const combinations = {
+            'بـ + ـيـ + ـت': { result: 'بيت', romanization: 'bayt', meaning: 'casa' },
+            'كـ + ـتـ + ـاب': { result: 'كتاب', romanization: 'kitab', meaning: 'libro' },
+            'مـ + ـاء': { result: 'ماء', romanization: 'ma\'', meaning: 'acqua' },
+            'شـ + ـمـ + ـس': { result: 'شمس', romanization: 'shams', meaning: 'sole' },
+            'قـ + ـمـ + ـر': { result: 'قمر', romanization: 'qamar', meaning: 'luna' },
+            'وـ + ـلـ + ـد': { result: 'ولد', romanization: 'walad', meaning: 'ragazzo' },
+            'بـ + ـنـ + ـت': { result: 'بنت', romanization: 'bint', meaning: 'ragazza' },
+            'سـ + ـلـ + ـام': { result: 'سلام', romanization: 'salam', meaning: 'pace' },
+            'حـ + ـب': { result: 'حب', romanization: 'hubb', meaning: 'amore' },
+            'خـ + ـبـ + ـز': { result: 'خبز', romanization: 'khubz', meaning: 'pane' }
+        };
+
         // State
         let currentContent = 'letters';
         let currentMode = 'study';
@@ -412,6 +428,7 @@
         const recognitionBtn = document.getElementById('recognitionBtn');
         const writingBtn = document.getElementById('writingBtn');
         const meaningBtn = document.getElementById('meaningBtn');
+        const combinationBtn = document.getElementById('combinationBtn');
         const practiceLettersBtn = document.getElementById('practiceLettersBtn');
         const practiceWordsBtn = document.getElementById('practiceWordsBtn');
         const practiceCard = document.getElementById('practiceCard');
@@ -438,6 +455,7 @@
         recognitionBtn.addEventListener('click', () => switchPracticeMode('recognition'));
         writingBtn.addEventListener('click', () => switchPracticeMode('writing'));
         meaningBtn.addEventListener('click', () => switchPracticeMode('meaning'));
+        combinationBtn.addEventListener('click', () => switchPracticeMode('combination'));
         practiceLettersBtn.addEventListener('click', () => switchPracticeContent('letters'));
         practiceWordsBtn.addEventListener('click', () => switchPracticeContent('words'));
         nextBtn.addEventListener('click', nextQuestion);
@@ -500,6 +518,7 @@
             recognitionBtn.className = 'px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm';
             writingBtn.className = 'px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm';
             meaningBtn.className = 'px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm';
+            combinationBtn.className = 'px-3 py-2 rounded-md text-orange-600 font-medium hover:bg-orange-50 text-sm';
             
             if (mode === 'recognition') {
                 recognitionBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
@@ -507,6 +526,8 @@
                 writingBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
             } else if (mode === 'meaning') {
                 meaningBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
+            } else if (mode === 'combination') {
+                combinationBtn.className = 'px-3 py-2 rounded-md bg-orange-500 text-white font-medium text-sm';
             }
             startPractice();
         }
@@ -641,6 +662,8 @@
                 setupWritingQuestion();
             } else if (practiceMode === 'meaning') {
                 setupMeaningQuestion();
+            } else if (practiceMode === 'combination') {
+                setupCombinationQuestion();
             }
         }
 
@@ -740,6 +763,46 @@
             }
         }
 
+        function setupCombinationQuestion() {
+            const combArray = Object.entries(combinations);
+            const randomComb = combArray[Math.floor(Math.random() * combArray.length)];
+            
+            currentQuestion = {
+                char: randomComb[0],
+                data: randomComb[1]
+            };
+
+            questionText.textContent = randomComb[0];
+            questionPrompt.textContent = 'Quale parola si forma combinando queste lettere?';
+            
+            const correctAnswer = randomComb[1].result;
+            const allAnswers = Object.values(combinations).map(c => c.result);
+            
+            const options = [correctAnswer];
+            while (options.length < 4) {
+                const randomAnswer = allAnswers[Math.floor(Math.random() * allAnswers.length)];
+                if (!options.includes(randomAnswer)) {
+                    options.push(randomAnswer);
+                }
+            }
+            
+            options.sort(() => Math.random() - 0.5);
+            
+            answerOptions.classList.remove('hidden');
+            writingInput.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+            checkBtn.classList.add('hidden');
+            
+            answerOptions.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium text-lg arabic-font';
+                button.textContent = option;
+                button.addEventListener('click', () => checkCombinationAnswer(option, correctAnswer));
+                answerOptions.appendChild(button);
+            });
+        }
+
         function checkRecognitionAnswer(selected, correct) {
             total++;
             const isCorrect = selected === correct;
@@ -782,6 +845,30 @@
             checkBtn.classList.add('hidden');
         }
 
+        function checkCombinationAnswer(selected, correct) {
+            total++;
+            const isCorrect = selected === correct;
+            
+            if (isCorrect) {
+                score++;
+                showFeedback(`صحيح! 🎉 ${currentQuestion.data.romanization} = ${currentQuestion.data.meaning}`, 'bg-green-100 text-green-800');
+            } else {
+                showFeedback(`خطأ. La parola corretta è: ${correct} (${currentQuestion.data.romanization} = ${currentQuestion.data.meaning})`, 'bg-red-100 text-red-800');
+            }
+            
+            updateScore();
+            
+            const buttons = answerOptions.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === correct) {
+                    btn.className = btn.className.replace('bg-gray-100', 'bg-green-200');
+                } else if (btn.textContent === selected && !isCorrect) {
+                    btn.className = btn.className.replace('bg-gray-100', 'bg-red-200');
+                }
+            });
+        }
+
         function showFeedback(message, className) {
             feedbackText.textContent = message;
             feedback.className = `mb-8 p-4 rounded-lg ${className}`;
@@ -812,5 +899,5 @@
         renderCharacterGrid();
         updateExerciseInfo();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'970ca82ab487ee99',t:'MTc1NTQ3MDI1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9711edeaa1640e51',t:'MTc1NTUyNTU0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
